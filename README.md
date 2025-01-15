@@ -1,6 +1,6 @@
-# ConversoMVP
+# Converso MVP
 
-Converso es un MVP de una plataforma diseñada para crear un bot de ventas sencillo y personalizado, que interactúa con clientes a través de la API de WhatsApp. Este bot puede configurarse desde una interfaz en Streamlit y se conecta a los chats de WhatsApp para ayudar a generar leads y ventas.
+Converso es un MVP de una plataforma diseñada para crear un bot de ventas sencillo y personalizado, que interactúa con clientes a través de la API de WhatsApp. Este bot puede configurarse desde una interfaz en Streamlit y se conecta a los chats de WhatsApp para ayudar a generar leads y ventas, utilizando OpenAI y LangChain para respuestas inteligentes.
 
 ---
 
@@ -12,10 +12,13 @@ Converso es un MVP de una plataforma diseñada para crear un bot de ventas senci
 2. **Integración con WhatsApp:**
    - Utiliza la API de WhatsApp para conectarse a los chats y manejar conversaciones en tiempo real.
 
-3. **Generación de Leads:**
+3. **Respuestas Inteligentes con IA:**
+   - Emplea OpenAI y LangChain para generar respuestas dinámicas y naturales basadas en el contexto de la conversación.
+
+4. **Generación de Leads:**
    - Responde automáticamente a preguntas comunes de los clientes y los guía hacia una conversión o generación de leads.
 
-4. **Simplicidad:**
+5. **Simplicidad:**
    - Sin base de datos, toda la configuración se guarda en archivos temporales para pruebas rápidas.
 
 ---
@@ -36,10 +39,12 @@ Estas son las librerías necesarias para el proyecto:
 - `requests`
 - `python-dotenv`
 - `pyngrok`
+- `openai`
+- `langchain`
 
 Instálalas con:
 ```bash
-pip install fastapi uvicorn streamlit requests python-dotenv pyngrok
+pip install fastapi uvicorn streamlit requests python-dotenv pyngrok openai langchain
 ```
 
 ---
@@ -55,7 +60,7 @@ converso/
 │   │   └── tokens.py         # Gestión de tokens de acceso
 │   ├── bot/                  # Lógica del bot y manejo de mensajes
 │   │   ├── webhook.py        # Webhook para WhatsApp
-│   │   └── responses.py      # Lógica para generar respuestas
+│   │   └── responses.py      # Lógica para generar respuestas con OpenAI y LangChain
 │   ├── database/             # Conexión y modelos de datos
 │   │   ├── models.py         # Modelos de base de datos
 │   │   └── db.py             # Configuración de la base de datos
@@ -126,7 +131,7 @@ streamlit run frontend/app.py
    - A través del flujo OAuth, el usuario autoriza el acceso a su cuenta de WhatsApp.
 
 3. **Operación del Bot:**
-   - El bot responde automáticamente a los mensajes entrantes basándose en las configuraciones y, si es necesario, utiliza OpenAI para generar respuestas dinámicas.
+   - El bot responde automáticamente a los mensajes entrantes basándose en las configuraciones y, si es necesario, utiliza OpenAI y LangChain para generar respuestas dinámicas.
 
 ---
 
