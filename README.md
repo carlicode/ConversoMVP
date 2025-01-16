@@ -73,9 +73,10 @@ converso/
 │   ├── test_backend.py       # Tests del backend
 │   ├── test_frontend.py      # Tests del frontend
 │   └── test_oauth.py         # Tests de OAuth
+├── config.json   
 ├── Pipfile                   # Dependencias del proyecto
 ├── README.md                 # Documentación del proyecto
-└── requirements.txt          # Lista de dependencias (opcional)
+└── requirements.txt          # Lista de dependencias 
 ```
 
 ---
