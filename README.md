@@ -1,6 +1,6 @@
 # Converso MVP
 
-Converso es un MVP de una plataforma diseñada para crear un bot de ventas sencillo y personalizado, que interactúa con clientes a través de la API de WhatsApp. Este bot puede configurarse desde una interfaz en Streamlit y se conecta a los chats de WhatsApp para ayudar a generar leads y ventas, utilizando OpenAI y LangChain para respuestas inteligentes.
+Converso es un MVP de una plataforma diseñada para crear un bot de ventas sencillo y personalizable que interactúa con clientes a través de la API de WhatsApp. Este bot puede configurarse mediante una interfaz en Streamlit y se conecta a los chats de WhatsApp para ayudar a generar leads y ventas utilizando OpenAI y LangChain para respuestas inteligentes.
 
 ---
 
@@ -19,7 +19,7 @@ Converso es un MVP de una plataforma diseñada para crear un bot de ventas senci
    - Responde automáticamente a preguntas comunes de los clientes y los guía hacia una conversión o generación de leads.
 
 5. **Simplicidad:**
-   - Sin base de datos, toda la configuración se guarda en archivos temporales para pruebas rápidas.
+   - Sin base de datos; todas las configuraciones se guardan en archivos temporales para pruebas rápidas.
 
 ---
 
@@ -31,7 +31,7 @@ Converso es un MVP de una plataforma diseñada para crear un bot de ventas senci
 
 ### Dependencias de Python
 
-Estas son las librerías necesarias para el proyecto:
+Las siguientes librerías son necesarias para el proyecto:
 
 - `fastapi`
 - `uvicorn`
@@ -73,9 +73,10 @@ converso/
 │   ├── test_backend.py       # Tests del backend
 │   ├── test_frontend.py      # Tests del frontend
 │   └── test_oauth.py         # Tests de OAuth
+├── config.json               # Archivo de configuración del bot
 ├── Pipfile                   # Dependencias del proyecto
 ├── README.md                 # Documentación del proyecto
-└── requirements.txt          # Lista de dependencias (opcional)
+└── requirements.txt          # Lista de dependencias
 ```
 
 ---
@@ -84,7 +85,7 @@ converso/
 
 ### Paso 1: Clonar el Repositorio
 ```bash
-git clone https://github.com/tu_usuario/converso.git
+git clone https://github.com/carlicode/ConversoMVP.git
 cd converso
 ```
 
@@ -98,10 +99,10 @@ pipenv shell
 ### Paso 3: Configurar Variables de Entorno
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ```env
-OPENAI_API_KEY=tu_clave_openai
-META_CLIENT_ID=tu_cliente_id
-META_CLIENT_SECRET=tu_cliente_secreto
-REDIRECT_URI=https://tu_ngrok_url.ngrok.io/oauth/callback
+VERIFY_TOKEN=tu_token_de_verificación
+ACCESS_TOKEN=tu_token_de_acceso
+WHATSAPP_API_URL=tu_url_api_whatsapp
+OPENAI_API_KEY=tu_clave_api_openai
 ```
 
 ### Paso 4: Ejecutar el Backend
@@ -113,7 +114,7 @@ uvicorn backend.app:app --reload
 ```bash
 ngrok http 8000
 ```
-Copia la URL pública proporcionada por ngrok y regístrala como webhook en el panel de Meta para WhatsApp.
+Copia la URL pública proporcionada por Ngrok y regístrala como webhook en el panel de Meta para WhatsApp.
 
 ### Paso 6: Ejecutar el Frontend
 ```bash
@@ -125,17 +126,17 @@ streamlit run frontend/app.py
 ## **Flujo de Trabajo del Usuario**
 
 1. **Configuración del Bot:**
-   - Desde Streamlit, los usuarios pueden personalizar el mensaje de bienvenida, respuestas automáticas, y mensaje de cierre.
+   - Personaliza el mensaje de bienvenida, respuestas automáticas y mensaje de cierre desde Streamlit.
 
 2. **Conexión con WhatsApp:**
-   - A través del flujo OAuth, el usuario autoriza el acceso a su cuenta de WhatsApp.
+   - Usa el flujo OAuth para autorizar el acceso a tu cuenta de WhatsApp.
 
 3. **Operación del Bot:**
-   - El bot responde automáticamente a los mensajes entrantes basándose en las configuraciones y, si es necesario, utiliza OpenAI y LangChain para generar respuestas dinámicas.
+   - El bot responde automáticamente a los mensajes entrantes basándose en las configuraciones y, si es necesario, utiliza OpenAI y LangChain para respuestas dinámicas.
 
 ---
 
-## **Próximos Pasos**
+## **Next Steps / Próximos Pasos**
 
 - Mejorar el flujo OAuth para optimizar la autorización de usuarios.
 - Agregar opciones avanzadas de personalización en la interfaz de Streamlit.
@@ -143,5 +144,5 @@ streamlit run frontend/app.py
 
 ---
 
-¡Listo para crear bots efectivos con Converso! 🚀
+¡Listo para crear bots efectivos con Converso! / Ready to create effective bots with Converso! 🚀
 
