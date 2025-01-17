@@ -1,0 +1,41 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and debug files
+*.log
+*.bak
+*.tmp
+
+# Pytest cache
+.pytest_cache/
+
+# Byte-compiled files
+*.egg-info/
+*.egg
+*.eggs
+
+# Cache directories
+.mypy_cache/
+.coverage
+.hypothesis/
+.cache/
+
+# Other files
+pip-wheel-metadata/
+htmlcov/
