@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from backend.bot.telegram_bot import send_message
 from backend.bot.responses import generate_response
 from backend.config import TELEGRAM_BOT_TOKEN, NGROK_URL
+import requests
 
 app = FastAPI()
 
