@@ -1,54 +1,124 @@
-# Converso - Main Branch
+# ConversoMVP
 
-Esta es la rama principal del proyecto **Converso**, un MVP para crear bots de ventas personalizados que interactúan con clientes mediante diferentes plataformas de mensajería, comenzando con WhatsApp y Telegram. Esta rama se usa como base para organizar y planificar el desarrollo general del proyecto.
-
----
-
-## **Propósito de la Rama Main**
-
-La rama `main` se utiliza como punto central del proyecto, manteniendo una visión general de las funcionalidades del MVP y asegurando que las implementaciones de WhatsApp y Telegram se desarrollen de forma separada y ordenada.
-
-En esta rama no se implementa directamente funcionalidad específica para ninguna plataforma de mensajería, sino que se utiliza para documentación y gestión del proyecto.
+ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en WhatsApp utilizando `whatsapp-web.js` para la interacción con los clientes y `FastAPI` para el procesamiento de mensajes con la inteligencia artificial de OpenAI.
 
 ---
 
-## **Estructura del Proyecto en Main**
+## **Características Principales**
+
+1. **Integración con WhatsApp:**
+   - Usa `whatsapp-web.js` para interactuar con clientes en tiempo real.
+   - Sesión persistente mediante `LocalAuth`.
+
+2. **Respuestas Inteligentes con OpenAI:**
+   - Emplea OpenAI para generar respuestas naturales basadas en el contexto de la conversación.
+
+3. **Backend en FastAPI:**
+   - Manejo eficiente de las solicitudes del bot de WhatsApp.
+   - Rutas para gestionar la interacción con OpenAI.
+
+4. **Organización Modular:**
+   - Separación de la lógica del bot de WhatsApp y la gestión de respuestas con AI.
+
+---
+
+## **Requisitos del Sistema**
+
+- **Python 3.8+**
+- **Node.js 16+**
+- **Ngrok** (para exponer el servidor local a internet)
+
+### Dependencias de Python
+
+Las siguientes librerías son necesarias para el backend:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Dependencias de Node.js
+
+Instala las dependencias de Node.js dentro de la carpeta `WhatsappAPI`:
+
+```bash
+cd WhatsappAPI
+npm install
+```
+
+---
+
+## **Estructura del Proyecto**
 
 ```
-converso/
-├── whatsapp/                # Rama separada para la integración con WhatsApp
-├── telegram/                # Rama separada para la integración con Telegram
-├── README.md                # Documentación de la rama principal
-└── otros_archivos/          # Archivos relevantes para la organización general
+conversoMVP/
+├── backend/                      # Lógica del servidor y APIs
+│   ├── ai_responses.py            # Respuestas con OpenAI
+│   ├── app.py                      # Servidor FastAPI
+│   ├── config.py                    # Configuración de variables de entorno
+│   ├── examples.py                  # Ejemplos de conversación
+│   └── requirements.txt              # Lista de dependencias de Python
+├── WhatsappAPI/                   # Lógica del bot de WhatsApp
+│   ├── whatsappBot.js                # Cliente de WhatsApp
+│   ├── package.json                   # Dependencias de Node.js
+│   ├── package-lock.json               # Archivo de lock de dependencias
+│   └── node_modules/                   # Dependencias instaladas
+├── .env                             # Variables de entorno (ignorado en GitHub)
+├── README.md                         # Documentación del proyecto
+└── .gitignore                         # Exclusiones de archivos para Git
 ```
 
 ---
 
-## **Próximos Pasos**
+## **Cómo Configurar el Proyecto**
 
-1. **WhatsApp:**
-   - Completar la implementación del bot de ventas para WhatsApp.
-   - Integrar configuraciones personalizables mediante Streamlit.
+### Paso 1: Clonar el Repositorio
 
-2. **Telegram:**
-   - Completar la implementación del bot de ventas para Telegram.
-   - Establecer el manejo del webhook de Telegram para mensajes.
+```bash
+git clone https://github.com/carlicode/ConversoMVP.git
+cd conversoMVP
+```
 
-3. **Documentación y Consolidación:**
-   - Mantener una documentación clara y actualizada en cada rama.
-   - Planificar futuras integraciones con otras plataformas como Facebook Messenger o Instagram.
+### Paso 2: Configurar Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+```env
+OPENAI_API_KEY=tu_clave_api_openai
+FASTAPI_HOST=http://localhost:8000
+```
+
+### Paso 3: Ejecutar el Backend (FastAPI)
+
+```bash
+cd backend
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Paso 4: Ejecutar el Bot de WhatsApp
+
+```bash
+cd WhatsappAPI
+node whatsappBot.js
+```
 
 ---
 
-## **Contribuciones**
+## **Flujo de Trabajo del Proyecto**
 
-Para contribuir a este proyecto:
-
-1. Crea una nueva rama basada en `main` o una de las ramas existentes (`whatsapp`, `telegram`).
-2. Realiza los cambios necesarios en la rama correspondiente.
-3. Realiza un pull request para integrar los cambios.
+1. El cliente envía un mensaje a WhatsApp.
+2. `whatsappBot.js` recibe el mensaje y lo envía al backend de FastAPI.
+3. FastAPI procesa el mensaje usando OpenAI y devuelve la respuesta.
+4. El bot de WhatsApp envía la respuesta generada al cliente.
 
 ---
 
-¡Gracias por contribuir al desarrollo de Converso! 🚀
+## **Next Steps / Próximos Pasos**
+
+- Mejorar la lógica de respuestas utilizando más ejemplos en `examples.py`.
+- Agregar una interfaz visual en Streamlit para la gestión del bot.
+- Implementar métricas para analizar interacciones.
+
+---
+
+¡Listo para automatizar tu negocio con ConversoMVP! 🚀
 
