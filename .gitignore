@@ -39,3 +39,21 @@ env/
 # Other files
 pip-wheel-metadata/
 htmlcov/
+
+# Ignorar la carpeta de autenticación de WhatsApp Web.js
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Ignorar archivos y carpetas de WhatsAppAPI
+WhatsappAPI/node_modules/
+WhatsappAPI/qr.jpeg
+WhatsappAPI/regalo.pdf
+WhatsappAPI/.wwebjs_cache/
+
+# Ignorar archivos de FastAPI y backend
+backend/messages_classify_response.py
+backend/messages_generate_response.py
+backend/examples.py
+
+# Ignorar herramientas temporales
+rename_files.py
