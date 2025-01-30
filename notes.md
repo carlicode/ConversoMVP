@@ -137,7 +137,6 @@ node whatsappBot.js
 ✅ **Flujo de ventas mejorado**
 ✅ **Optimización de mensajes**
 ✅ **Notificación automática al administrador**
-✅ **Manejo de pagos confirmados y almacenamiento en `ventas.json`**
 ✅ **Manejo de mensajes pendientes para responder automáticamente**
 ✅ **Manejo de intenciones como "Pedir información de dibujos", "Niño pintando" y "Pinta otro"**
 
