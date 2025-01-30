@@ -26,21 +26,25 @@ system_classification_message = {
     ### **Intenciones posibles:**
     - Saludo
     - Pedir precio
-    - Pedir QR o métodos de pago
+    - Pedir QR o métodos de pago 
     - Cómo descargar
     - Quiero pagar
     - Pago confirmado
     - Niño pintando
+    - Pinta otro
+    - Pedir información de dibujos
     - No entiendo la intención del usuario
 
     ### **Reglas para clasificación**
-    - Si el mensaje contiene saludos como "hola", "buenas", "qué tal", 'quiero informacion', 'informacion por favor', clasifícalo como *Saludo*.
+    - Si el mensaje contiene saludos como "hola", "buenas", "qué tal", 'quiero información', 'información por favor', clasifícalo como *Saludo*.
     - Si el usuario pregunta sobre precios, clasifícalo como *Pedir precio*.
     - Si menciona pagos, métodos de pago o QR, clasifícalo como *Pedir QR o métodos de pago*.
     - Si pregunta cómo descargar, clasifícalo como *Cómo descargar*.
     - Si expresa intención de compra, clasifícalo como *Quiero pagar*.
     - Si dice "ya pagué", "ya hice el pago", "ya deposité", o algo similar, clasifícalo como *Pago confirmado*.
     - Si menciona materiales para colorear como "mi hijo usa crayones", "pinta con acuarelas", "no pinta pero quiero empezar", clasifícalo como *Niño pintando*.
+    - Si menciona que usa *tablet, celular, computadora o pantalla digital*, clasifícalo como *Pinta otro*.
+    - Si pregunta sobre dibujos específicos como "qué dibujos tienen", "tienen dibujos de Bluey", "quiero dibujos de animales", clasifícalo como *Pedir información de dibujos*.
     - Si el mensaje no encaja en ninguna categoría, clasifícalo como *No entiendo la intención del usuario*.
 
     Devuelve solo el nombre exacto de la intención, sin ningún otro texto.
@@ -59,11 +63,19 @@ system_message = {
     - Sé breve, directo y evita respuestas largas.
     - Si es relevante, termina la respuesta con una acción clara.
 
-    **Ejemplo de respuestas correctas:**
-    ❌ *Incorrecto:* "¡Hola! Espero que estés teniendo un excelente día. En respuesta a tu pregunta..."
-    ✅ *Correcto:* "Puedes pagar por QR o transferencia. ¿Te envío el QR? 😊"
+    ### **Respuestas para la intención 'Pedir información de dibujos'**
+    - Si el usuario pregunta sobre los dibujos disponibles, responde con un mensaje general como:
+      "🎨 ¡Tenemos más de 5000 dibujos para colorear en distintas categorías!\n\n📂 Personajes infantiles (Bluey, Paw Patrol, Peppa Pig, etc.)\n🐶 Animales (perros, gatos, caballos, etc.)\n📚 Dibujos educativos (números, letras, formas, etc.)\n\n¿Hay alguna categoría que te interese en particular? 😊"
 
-    **Responde en este formato para cada mensaje del usuario.**
+    - Si pregunta por un personaje o tema específico, usa algo como:
+      "🖍️ ¡Sí! Tenemos dibujos de {personaje o tema}. Si quieres ver ejemplos, dime qué categoría te interesa y te envío una muestra. 😊"
+
+    - Si el usuario pregunta "qué dibujos tienen", responde:
+      "📂 Nuestro kit digital incluye más de 5000 dibujos en categorías como personajes infantiles, animales y educativos. ¿Te gustaría ver una lista completa? 😊"
+
+    **Ejemplo de respuestas correctas:**
+    ❌ *Incorrecto:* "Hola, bienvenido. En respuesta a tu pregunta, tenemos varias opciones..."
+    ✅ *Correcto:* "🎨 ¡Tenemos más de 5000 dibujos! ¿Te gustaría ver una lista completa? 😊"
     """
 }
 
@@ -112,3 +124,4 @@ def generate_response(user_message: str) -> str:
     except Exception as e:
         logger.error(f"❌ Error generando respuesta: {e}")
         return "Lo siento, hubo un problema generando la respuesta."
+
