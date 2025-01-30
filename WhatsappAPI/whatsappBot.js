@@ -24,15 +24,15 @@ client.on('ready', () => {
 // 📌 Mapeo de respuestas numéricas a intenciones
 const numericIntentMapping = {
     "1": "Quiero pagar",
-    "2": "Quiero que mi hijo dibuje y pinte",
-    "3": "Cómo funciona la descarga",
+    "2": "Pedir información de dibujos",
+    "3": "Cómo descargar",
     "4": "Cuál es el precio del kit"
 };
 
-// 📌 Función para enviar mensajes con retraso
+// 📌 Función para enviar mensajes con un intervalo de 1 segundo entre cada uno
 async function sendMessages(chatId, messages) {
     for (const msg of messages) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera 1 segundo entre mensajes
         await client.sendMessage(chatId, msg);
         console.log(`📤 Mensaje enviado a ${chatId}: ${msg}`);
     }
@@ -51,17 +51,17 @@ async function handlePaymentConfirmation(chatId) {
         "✅ *¡Gracias por tu pago!* \n\n📷 *Estamos verificando la transacción con tu comprobante de pago.* 🔎",
         "⌛ *Te responderemos en breve.*"
     ]);
-
     await notifyAdminPayment(chatId);
 }
+
 // 📌 Opciones en un solo mensaje con mejor formato
 const helpOptionsMessage = 
-    "🤖 *Si necesitas ayuda, puedes pedirme alguna de estas opciones:*\n\n" +
+    "🤖 *¡Ups! No entendí lo que necesitas.*\n" +
+    "Por favor, escribe una de estas opciones para continuar la conversación:\n\n" +
     "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
-    "• 🖼️ *¿Qué dibujos tienen?* - Para conocer las categorías de dibujos disponibles.\n" +
-    "• 📥 *¿Cómo funciona la descarga?* - Para saber cómo recibir los dibujos después del pago.\n" +
-    "• 💰 *¿Cuál es el precio del kit?* - Para conocer el costo del paquete de dibujos.\n" +
-    "• ✅ *Ya realicé el pago* - Para confirmar tu pago y recibir el enlace de descarga.";
+    "• 🖼️ *Ver dibujos disponibles* - Para conocer las categorías de dibujos.\n" +
+    "• 💰 *Saber el precio* - Para conocer el costo del kit de dibujos.\n" +
+    "• ✅ *Confirmar mi pago* - Si ya realizaste el pago y quieres confirmarlo.";
 
 // 📌 Manejo de mensajes recibidos con acumulación de 6 segundos
 client.on('message', async (message) => {
@@ -98,89 +98,150 @@ client.on('message', async (message) => {
             console.log(`🔍 Intención detectada: ${classifyData.intent}`);
 
             switch (classifyData.intent) {
-                case "Saludo":
-                    await sendMessages(chatId, [
-                        "👋 ¡Hola! Soy *Flor* de *Coloreando Juntos*. ¡Bienvenido! 😊",
-                        "🎁 Te regalo un *libro digital gratuito* con dibujos para colorear. ¡Espero que lo disfruten!\n\n📚 *Descárgalo aquí:* 👉 https://drive.google.com/file/d/1MAkd7iOlWIqxCC6MXvhsAzqCaUrlz7Pz/ 🔗",
-                        "✨ También tenemos un *kit con más de 5000 dibujos* por *25 Bs* en categorías como *personajes infantiles, naturaleza y educativos*.",
-                        "🤔 Tu niño o niña utiliza colores, crayones, tableta digital o algo más para pintar y dibujar? 😊"
-                    ]);
-                    break;
-                case "Pedir información de dibujos":
-                    await sendMessages(chatId, [
-                        "🎨 Tenemos más de 5000 dibujos para colorear en distintas categorías!\n\n" +
-                        "📂 *Categorías disponibles:*\n" +
-                        "•⁠  ⁠🌟 *Personajes infantiles:* Bluey, Paw Patrol, Peppa Pig y más.\n" +
-                        "•⁠  ⁠🐶 *Animales:* Perros, gatos, caballos y más.\n" +
-                        "•⁠  ⁠🖼️ *Mandalas y arte abstracto*.\n" +
-                        "•⁠  ⁠🏰 *Fantasía:* Unicornios, sirenas, hadas y castillos.\n" +
-                        "•⁠  ⁠🎬 *Películas y series:* Moana, Toy Story, Frozen y más."
-                    ]);
-                
-                    await sendMessages(chatId, [
-                        "🎥 *Aquí tienes un video con los dibujos disponibles:* 👉 https://video.com"
-                    ]);
-                
-                    await sendMessages(chatId, [
-                        "Responde *QUIERO COMPRAR* para compartirte la información de pago 😊"
-                    ]);
-                    return;
+                // 📌 Enviar PDF de regalo
+            // 📌 Enviar PDF de regalo
+case "Saludo":
+    await sendMessages(chatId, [
+        "👋 ¡Hola! Soy *Flor* de *Coloreando Juntos*. ¡Bienvenid@! 😊",
+        "🎁 Te obsequio un *libro digital gratuito* con una pequeña muestra de los dibujos para colorear que tenemos disponibles. 🎨✨"
+    ]);
+
+    try {
+        const pdfFile = MessageMedia.fromFilePath(path.join(__dirname, "regalo.pdf"));
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera 1 segundo antes de enviar el PDF
+        await client.sendMessage(chatId, pdfFile);
+        console.log(`📤 PDF de regalo enviado a ${chatId}`);
+    } catch (error) {
+        console.error("❌ Error enviando el PDF de regalo:", error);
+    }
+
+    await sendMessages(chatId, [
+        "✨ Si te gustan estos dibujos, te encantará nuestro *kit premium* con más de *5000 ilustraciones* listas para imprimir y colorear en casa. 🖌️✏️",
+        "📌 ¿Cuántos años tiene tu niño o niña? Así puedo recomendarte los mejores dibujos para su edad. 🎂"
+    ]);
+    break;
+
+case "Edad":
+    await sendMessages(chatId, [
+        "🎨 ¡Genial! Contamos con diferentes dibujos adaptados a cada edad."
+    ]);
+
+    await sendMessages(chatId, [
+        "🎨 *Accede a más de 5000 plantillas en distintas categorías por solo *25 Bs!!!*\n\n" +
+        "📂 *Categorías disponibles:*\n" +
+        "•⁠ 🌟 *Personajes infantiles:* Bluey, Paw Patrol, Peppa Pig y más.\n" +
+        "•⁠ 🐶 *Animales:* Perros, gatos, caballos y más.\n" +
+        "•⁠ 🖼️ *Mandalas y arte abstracto*.\n" +
+        "•⁠ 🏰 *Fantasía:* Unicornios, sirenas, hadas y castillos.\n" +
+        "•⁠ 🎬 *Películas y series:* Moana, Toy Story, Frozen y más."
+    ]);
+
+    await sendMessages(chatId, [
+        "🎥 *Aquí tienes un video con los dibujos disponibles:* 👉 https://video.com"
+    ]);
+
+    await sendMessages(chatId, [
+        "📌 Responde *QUIERO COMPRAR* para recibir la información de pago 😊"
+    ]);
+    break;
+
+case "Pedir información de dibujos":
+    await sendMessages(chatId, [
+        "🎨 *Accede a más de 5000 plantillas en distintas categorías por solo *25 Bs!!!*\n\n" +
+        "📂 *Categorías disponibles:*\n" +
+        "•⁠ 🌟 *Personajes infantiles:* Bluey, Paw Patrol, Peppa Pig y más.\n" +
+        "•⁠ 🐶 *Animales:* Perros, gatos, caballos y más.\n" +
+        "•⁠ 🖼️ *Mandalas y arte abstracto*.\n" +
+        "•⁠ 🏰 *Fantasía:* Unicornios, sirenas, hadas y castillos.\n" +
+        "•⁠ 🎬 *Películas y series:* Moana, Toy Story, Frozen y más."
+    ]);
+
+    await sendMessages(chatId, [
+        "🎥 *Aquí tienes un video con los dibujos disponibles:* 👉 https://video.com"
+    ]);
+
+    await sendMessages(chatId, [
+        "📌 Responde *QUIERO COMPRAR* para recibir la información de pago 😊"
+    ]);
+    break;
+
+// 📌 Enviar QR de pago
+case "Pedir QR o métodos de pago":
+case "Quiero pagar":
+    await sendMessages(chatId, [
+        "💳 *¡Claro! Aceptamos pagos por QR. 😊*",
+        "📥 Aquí tienes el QR para realizar el pago de tan solo *25 Bs.*"
+    ]);
+
+    try {
+        const media = MessageMedia.fromFilePath(path.join(__dirname, "qr.jpeg"));
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera 1 segundo antes de enviar el QR
+        await client.sendMessage(chatId, media);
+        console.log(`📤 QR de pago enviado a ${chatId}`);
+    } catch (error) {
+        console.error("❌ Error enviando el QR de pago:", error);
+    }
+
+    await sendMessages(chatId, [
+        "📌 *Sigue estos pasos para confirmar tu pago:*\n\n" +
+        "1️⃣ Adjunta una foto del comprobante de pago. 📷\n" +
+        "2️⃣ Luego de realizar el pago, escribe *'YA REALICÉ EL PAGO'* en este chat. ✍️\n" +
+        "3️⃣ Revisaremos tu pago y en un máximo de *10 minutos* recibirás el enlace de descarga. 🎨✨"
+    ]);
+    break;
+
+case "Pago confirmado":
+    await handlePaymentConfirmation(chatId);
+    break;
+
+case "Bot":
+    await sendMessages(chatId, [
+        "🤖 *Soy un bot y estoy haciendo mi mejor esfuerzo para reconocer tu mensaje.* 😊",
+        "📌 Para ayudarte mejor, por favor elige una opción escribiendo una de estas frases:"
+    ]);
+
+    await sendMessages(chatId, [
+        "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
+        "• 🖼️ *Ver dibujos disponibles* - Para conocer las categorías de dibujos.\n" +
+        "• 💰 *Saber el precio* - Para conocer el costo del kit de dibujos.\n" +
+        "• ✅ *Confirmar mi pago* - Si ya realizaste el pago y quieres confirmarlo."
+    ]);
+    break;
+
+case "No entiendo la intención del usuario":
+    try {
+        const generateResponse = await fetch("http://localhost:8000/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: fullMessage })
+        });
+
+        const responseData = await generateResponse.json();
+        const aiResponse = responseData.response || "Lo siento, no entendí tu mensaje. ¿Podrías reformularlo?";
+
+        await sendMessages(chatId, [aiResponse]);
+
+        // 📌 Enviar opciones después de la respuesta generada
+        await sendMessages(chatId, [
+            "📌 Para ayudarte mejor, por favor elige una opción escribiendo una de estas frases:"
+        ]);
+
+        await sendMessages(chatId, [
+            "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
+            "• 🖼️ *Ver dibujos disponibles* - Para conocer las categorías de dibujos.\n" +
+            "• 💰 *Saber el precio* - Para conocer el costo del kit de dibujos.\n" +
+            "• ✅ *Confirmar mi pago* - Si ya realizaste el pago y quieres confirmarlo."
+        ]);
+
+    } catch (error) {
+        console.error("❌ Error obteniendo respuesta generada:", error);
+        await sendMessages(chatId, ["Lo siento, ocurrió un error procesando tu mensaje."]);
+    }
+    break;
+
                     
-                
-
-                case "Niño pintando":
-                    await sendMessages(chatId, [
-                        "🎨 *¡Colorear es más que solo diversión!*",
-                        "🖌️ Estimula la creatividad y la imaginación.",
-                        "✍️ Mejora la motricidad fina y la coordinación.",
-                        "🎭 Fomenta la expresión emocional y la concentración.",
-                        "🎥 Aquí te dejo un video con los dibujos que tenemos disponibles para colorear. 😊",
-                        "👉 https://video.com",
-                        "🛍️ Si quieres darle a tu hijo acceso a todos estos dibujos, solo escribe *QUIERO COMPRAR* y te compartiré el QR para tu compra."
-                    ]);
-                    return;
-
-                case "Pinta otro":
-                    await sendMessages(chatId, [
-                        "🎨 ¡Qué genial! Tu niño disfruta del arte digital. 🖥️✨",
-                        "Puedes imprimir los dibujos en *alta calidad* y colorearlos con crayones, lápices o acuarelas.",
-                        "🎥 *Aquí tienes un video con los dibujos disponibles:*",
-                        "👉 https://video.com",
-                        "🛍️ Si quieres darle acceso a todos estos dibujos, solo escribe *QUIERO COMPRAR* y te compartiré el QR para tu compra."
-                    ]);
-                    return;
-
-                case "Pedir QR o métodos de pago":
-                case "Quiero pagar":
-                    await sendMessages(chatId, [
-                        "💳 *¡Claro! Aceptamos pagos por QR. 😊*",
-                        "📥 *Aquí tienes el QR para realizar el pago.* En cuanto lo confirmemos, recibirás tu enlace de descarga. ✅"
-                    ]);
-
-                    try {
-                        const media = MessageMedia.fromFilePath(path.join(__dirname, "qr.jpeg"));
-                        await client.sendMessage(chatId, media);
-                        console.log(`📤 QR de pago enviado a ${chatId}`);
-
-                        await sendMessages(chatId, [
-                            "📌 *Sigue estos pasos para confirmar tu pago:*\n\n" +
-                            "1️⃣ Luego de realizar el pago, escribe *'YA REALICÉ EL PAGO'* en este chat. ✍️\n" +
-                            "2️⃣ Adjunta una foto del comprobante de pago. 📷\n" +
-                            "3️⃣ Revisaremos tu pago y en un máximo de *10 minutos* recibirás el enlace de descarga. 🎨✨"
-                        ]);
-                    } catch (error) {
-                        console.error("❌ Error enviando el QR de pago:", error);
-                    }
-                    return;
-
-                case "Pago confirmado":
-                    await handlePaymentConfirmation(chatId);
-                    return;
-
-                default:
-                    await sendMessages(chatId, [helpOptionsMessage]);
-                    break;
-            }
+            }            
+            
         } catch (error) {
             console.error(`❌ Error en el procesamiento:`, error);
         }
