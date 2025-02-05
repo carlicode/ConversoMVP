@@ -49,7 +49,7 @@ async function notifyAdminPayment(chatId) {
 async function handlePaymentConfirmation(chatId) {
     await sendMessages(chatId, [
         "✅ *¡Gracias por tu pago!* \n\n📷 *Estamos verificando la transacción con tu comprobante de pago.* 🔎",
-        "⌛ *Te responderemos en breve.*"
+        "⌛ *Te responderemos en un aproximado de 5 minutos.*"
     ]);
     await notifyAdminPayment(chatId);
 }
@@ -58,13 +58,27 @@ async function handlePaymentConfirmation(chatId) {
 const helpOptionsMessage = 
     "🤖 *¡Ups! No entendí lo que necesitas.*\n" +
     "Por favor, escribe una de estas opciones para continuar la conversación:\n\n" +
-    "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
+    "• 👋 *Dime hola* - Para recibir un saludo y más información.\n" +
     "• 🖼️ *Ver dibujos disponibles* - Para conocer las categorías de dibujos.\n" +
+    "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
     "• 💰 *Saber el precio* - Para conocer el costo del kit de dibujos.\n" +
     "• ✅ *Confirmar mi pago* - Si ya realizaste el pago y quieres confirmarlo.";
 
 // 📌 Manejo de mensajes recibidos con acumulación de 6 segundos
 client.on('message', async (message) => {
+    // Ignorar mensajes que no sean de texto
+    if (message.type !== 'chat') {
+        console.log(`⏩ Mensaje ignorado: ${message.type} recibido de ${message.from}`);
+        return;
+    }
+
+    // Ignorar mensajes antiguos (no procesar mensajes previos al inicio del bot)
+    const messageAge = Math.floor(Date.now() / 1000) - message.timestamp; // Tiempo en segundos
+    if (messageAge > 10) { // Si el mensaje es más viejo de 10 segundos, ignorarlo
+        console.log(`⏩ Mensaje antiguo ignorado de ${message.from}`);
+        return;
+    }
+
     const chatId = message.from;
     let userMessage = message.body.trim();
 
@@ -117,7 +131,7 @@ case "Saludo":
 
     await sendMessages(chatId, [
         "✨ Si te gustan estos dibujos, te encantará nuestro *kit premium* con más de *5000 ilustraciones* listas para imprimir y colorear en casa. 🖌️✏️",
-        "📌 ¿Cuántos años tiene tu niño o niña? Así puedo recomendarte los mejores dibujos para su edad. 🎂"
+        "📌 ¿Cuántos años tiene tu niño o niña? 🎂"
     ]);
     break;
 
@@ -137,7 +151,7 @@ case "Edad":
     ]);
 
     await sendMessages(chatId, [
-        "🎥 *Aquí tienes un video con los dibujos disponibles:* 👉 https://video.com"
+        "🎥 *Aquí tienes un video con algunos de los dibujos disponibles:* 👉 https://youtube.com/shorts/86ZEPXKcG78"
     ]);
 
     await sendMessages(chatId, [
@@ -174,7 +188,7 @@ case "Quiero pagar":
     ]);
 
     try {
-        const media = MessageMedia.fromFilePath(path.join(__dirname, "qr.jpeg"));
+        const media = MessageMedia.fromFilePath(path.join(__dirname, "qr.png"));
         await new Promise(resolve => setTimeout(resolve, 1000)); // Espera 1 segundo antes de enviar el QR
         await client.sendMessage(chatId, media);
         console.log(`📤 QR de pago enviado a ${chatId}`);
@@ -245,7 +259,7 @@ case "No entiendo la intención del usuario":
         } catch (error) {
             console.error(`❌ Error en el procesamiento:`, error);
         }
-    }, 6000);
+    }, 10000);
 });
 
 client.initialize();
