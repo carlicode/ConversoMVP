@@ -241,6 +241,7 @@ case "No entiendo la intención del usuario":
         ]);
 
         await sendMessages(chatId, [
+            "👋 *Dime hola* - Para recibir un saludo y más información.\n" +
             "• 💳 *Quiero pagar* - Para recibir los detalles de pago.\n" +
             "• 🖼️ *Ver dibujos disponibles* - Para conocer las categorías de dibujos.\n" +
             "• 💰 *Saber el precio* - Para conocer el costo del kit de dibujos.\n" +

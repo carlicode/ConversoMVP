@@ -37,6 +37,8 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
 
 - **Node.js 16+**
 - **Ngrok** (para exponer el servidor local a internet)
+- **Python 3.8+**
+- **Uvicorn** (para ejecutar el backend de FastAPI)
 
 ### Dependencias de Node.js
 
@@ -45,6 +47,15 @@ Instala las dependencias dentro de la carpeta `WhatsappAPI`:
 ```bash
 cd WhatsappAPI
 npm install
+```
+
+### Dependencias de Python
+
+Instala las dependencias dentro de la carpeta `backend`:
+
+```bash
+cd backend
+pip install -r requirements.txt
 ```
 
 ---
@@ -58,12 +69,19 @@ conversoMVP/
 │   ├── .wwebjs_cache/             # Cache de sesión de WhatsApp
 │   ├── node_modules/              # Dependencias instaladas
 │   ├── whatsappBot.js             # Cliente de WhatsApp principal
-│   ├── unreadMessagesHandler.js   # Manejo de mensajes no respondidos
+│   ├── mensajes_pendientes.js      # Manejo de mensajes no respondidos
 │   ├── package.json               # Dependencias de Node.js
 │   ├── package-lock.json          # Archivo de lock de dependencias
 │   ├── qr.jpeg                    # Imagen del código QR para pagos
 │   ├── regalo.pdf                 # Libro digital gratuito
 │   ├── ventas.json                # Registro de ventas confirmadas
+├── backend/                       # Backend de FastAPI
+│   ├── app.py                     # Servidor de FastAPI
+│   ├── ai_responses.py            # Procesamiento de respuestas de IA
+│   ├── config.py                  # Configuración del backend
+│   ├── messages_classify_response.py # Clasificación de mensajes
+│   ├── messages_generate_response.py # Generación de respuestas
+│   ├── requirements.txt           # Dependencias de Python
 ├── .env                           # Variables de entorno (ignorado en GitHub)
 ├── README.md                      # Documentación del proyecto
 └── .gitignore                      # Exclusiones de archivos para Git
@@ -88,7 +106,14 @@ Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ADMIN_PHONE=59169533423@c.us
 ```
 
-### Paso 3: Ejecutar el Bot de WhatsApp
+### Paso 3: Ejecutar el Backend con FastAPI
+
+```bash
+cd backend
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Paso 4: Ejecutar el Bot de WhatsApp
 
 ```bash
 cd WhatsappAPI
@@ -116,8 +141,8 @@ node whatsappBot.js
 ✅ **Notificación automática al administrador**  
 ✅ **Manejo de mensajes pendientes y chats no respondidos**  
 ✅ **Manejo de intenciones como "Pedir información de dibujos" y "Quiero pagar"**  
+✅ **Backend con FastAPI para procesamiento de mensajes**  
 
 ---
 
 🚀 **Desarrollado por CarliCode. Listo para automatizar tu negocio con ConversoMVP!** 🎨✨
-
