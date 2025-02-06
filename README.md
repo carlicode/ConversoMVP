@@ -10,7 +10,8 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
    - Usa `whatsapp-web.js` para interactuar con clientes en tiempo real.
    - Sesión persistente mediante `LocalAuth`.
    - Notificación automática al administrador cuando un usuario confirma su pago.
-   
+   - Respuesta automática a mensajes no leídos o chats nuevos al iniciar el bot.
+
 2. **Flujo de Conversación Optimizado:**
    - Se envía automáticamente un libro digital gratuito como regalo de bienvenida.
    - Se personaliza la experiencia según la edad del niño o niña.
@@ -22,7 +23,11 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
    - Se proporciona un proceso detallado para confirmar el pago con foto del comprobante.
    - El bot notifica automáticamente al administrador cuando se reporta un pago.
 
-4. **Organización Modular:**
+4. **Manejo de Mensajes No Respondidos:**
+   - Al iniciar el bot, revisa los mensajes pendientes y envía una respuesta de bienvenida.
+   - Evita que los clientes queden sin atención si enviaron mensajes antes de que el bot estuviera activo.
+
+5. **Organización Modular:**
    - Separación de la lógica del bot de WhatsApp en un solo archivo `whatsappBot.js`.
    - Arquitectura clara y fácilmente mantenible.
 
@@ -32,6 +37,8 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
 
 - **Node.js 16+**
 - **Ngrok** (para exponer el servidor local a internet)
+- **Python 3.8+**
+- **Uvicorn** (para ejecutar el backend de FastAPI)
 
 ### Dependencias de Node.js
 
@@ -42,29 +49,39 @@ cd WhatsappAPI
 npm install
 ```
 
+### Dependencias de Python
+
+Instala las dependencias dentro de la carpeta `backend`:
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
 ---
 
 ## **Estructura del Proyecto**
 
 ```
 conversoMVP/
-├── backend/                      # Lógica del servidor y APIs
-│   ├── ai_responses.py           # Respuestas con OpenAI
-│   ├── app.py                    # Servidor FastAPI
-│   ├── config.py                 # Configuración de variables de entorno
-│   ├── messages_classify_response.py  # Clasificación de intenciones del usuario
-│   ├── messages_generate_response.py  # Generación de respuestas con AI
-│   └── requirements.txt           # Lista de dependencias de Python
 ├── WhatsappAPI/                   # Lógica del bot de WhatsApp
 │   ├── .wwebjs_auth/              # Caché de autenticación de WhatsApp
 │   ├── .wwebjs_cache/             # Cache de sesión de WhatsApp
 │   ├── node_modules/              # Dependencias instaladas
 │   ├── whatsappBot.js             # Cliente de WhatsApp principal
+│   ├── mensajes_pendientes.js      # Manejo de mensajes no respondidos
 │   ├── package.json               # Dependencias de Node.js
 │   ├── package-lock.json          # Archivo de lock de dependencias
 │   ├── qr.jpeg                    # Imagen del código QR para pagos
 │   ├── regalo.pdf                 # Libro digital gratuito
 │   ├── ventas.json                # Registro de ventas confirmadas
+├── backend/                       # Backend de FastAPI
+│   ├── app.py                     # Servidor de FastAPI
+│   ├── ai_responses.py            # Procesamiento de respuestas de IA
+│   ├── config.py                  # Configuración del backend
+│   ├── messages_classify_response.py # Clasificación de mensajes
+│   ├── messages_generate_response.py # Generación de respuestas
+│   ├── requirements.txt           # Dependencias de Python
 ├── .env                           # Variables de entorno (ignorado en GitHub)
 ├── README.md                      # Documentación del proyecto
 └── .gitignore                      # Exclusiones de archivos para Git
@@ -89,7 +106,14 @@ Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ADMIN_PHONE=59169533423@c.us
 ```
 
-### Paso 3: Ejecutar el Bot de WhatsApp
+### Paso 3: Ejecutar el Backend con FastAPI
+
+```bash
+cd backend
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Paso 4: Ejecutar el Bot de WhatsApp
 
 ```bash
 cd WhatsappAPI
@@ -106,6 +130,7 @@ node whatsappBot.js
    - El bot envía un mensaje de confirmación.
    - Se notifica automáticamente al administrador.
    - Se proporciona el enlace de descarga una vez validado el pago.
+4. Al iniciar el bot, revisa los mensajes sin responder y envía un mensaje de saludo a los chats nuevos.
 
 ---
 
@@ -114,9 +139,10 @@ node whatsappBot.js
 ✅ **Flujo de ventas mejorado**  
 ✅ **Optimización de mensajes**  
 ✅ **Notificación automática al administrador**  
+✅ **Manejo de mensajes pendientes y chats no respondidos**  
 ✅ **Manejo de intenciones como "Pedir información de dibujos" y "Quiero pagar"**  
+✅ **Backend con FastAPI para procesamiento de mensajes**  
 
 ---
 
 🚀 **Desarrollado por CarliCode. Listo para automatizar tu negocio con ConversoMVP!** 🎨✨
-
