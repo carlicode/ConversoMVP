@@ -1,6 +1,6 @@
 # ConversoMVP
 
-ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en WhatsApp utilizando `whatsapp-web.js`. Este bot permite interactuar con los clientes de manera eficiente, automatizando respuestas y gestionando pagos de manera organizada.
+ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en WhatsApp utilizando `whatsapp-web.js` y FastAPI. Este bot permite interactuar con los clientes de manera eficiente, automatizando respuestas y gestionando pagos de manera organizada.
 
 ---
 
@@ -27,8 +27,14 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
    - Al iniciar el bot, revisa los mensajes pendientes y envía una respuesta de bienvenida.
    - Evita que los clientes queden sin atención si enviaron mensajes antes de que el bot estuviera activo.
 
-5. **Organización Modular:**
-   - Separación de la lógica del bot de WhatsApp en un solo archivo `whatsappBot.js`.
+5. **API con FastAPI para Clasificación de Mensajes:**
+   - Endpoint `/classify`: Clasifica mensajes y detecta intención del usuario.
+   - Endpoint `/generate`: Genera respuestas utilizando OpenAI si es necesario.
+   - Comunicación eficiente entre el bot y la API para respuestas inteligentes.
+
+6. **Organización Modular:**
+   - Separación de la lógica del bot de WhatsApp en archivos modulares.
+   - FastAPI como backend para procesamiento de mensajes.
    - Arquitectura clara y fácilmente mantenible.
 
 ---
@@ -36,9 +42,9 @@ ConversoMVP es un proyecto diseñado para crear un bot de ventas automatizado en
 ## **Requisitos del Sistema**
 
 - **Node.js 16+**
-- **Ngrok** (para exponer el servidor local a internet)
 - **Python 3.8+**
-- **Uvicorn** (para ejecutar el backend de FastAPI)
+- **FastAPI y Uvicorn**
+- **Ngrok** (para exponer el servidor local a internet)
 
 ### Dependencias de Node.js
 
@@ -51,7 +57,7 @@ npm install
 
 ### Dependencias de Python
 
-Instala las dependencias dentro de la carpeta `backend`:
+Instala las dependencias necesarias dentro de la carpeta `backend`:
 
 ```bash
 cd backend
@@ -65,26 +71,26 @@ pip install -r requirements.txt
 ```
 conversoMVP/
 ├── WhatsappAPI/                   # Lógica del bot de WhatsApp
-│   ├── .wwebjs_auth/              # Caché de autenticación de WhatsApp
-│   ├── .wwebjs_cache/             # Cache de sesión de WhatsApp
-│   ├── node_modules/              # Dependencias instaladas
-│   ├── whatsappBot.js             # Cliente de WhatsApp principal
-│   ├── mensajes_pendientes.js      # Manejo de mensajes no respondidos
-│   ├── package.json               # Dependencias de Node.js
-│   ├── package-lock.json          # Archivo de lock de dependencias
-│   ├── qr.jpeg                    # Imagen del código QR para pagos
-│   ├── regalo.pdf                 # Libro digital gratuito
-│   ├── ventas.json                # Registro de ventas confirmadas
-├── backend/                       # Backend de FastAPI
-│   ├── app.py                     # Servidor de FastAPI
-│   ├── ai_responses.py            # Procesamiento de respuestas de IA
-│   ├── config.py                  # Configuración del backend
+│   ├── bot.js                     # Cliente de WhatsApp principal
+│   ├── handlers/                   # Manejadores de mensajes
+│   │   ├── messageHandler.js       # Procesa mensajes entrantes
+│   ├── utils/                      # Utilidades y funciones auxiliares
+│   │   ├── messageUtils.js         # Funciones para enviar mensajes
+│   ├── node_modules/               # Dependencias instaladas
+│   ├── package.json                # Dependencias de Node.js
+│   ├── package-lock.json           # Archivo de lock de dependencias
+│   ├── qr.png                      # Imagen del código QR para pagos
+│   ├── regalo.pdf                  # Libro digital gratuito
+│   ├── ventas.json                 # Registro de ventas confirmadas
+├── backend/                        # API con FastAPI para clasificación de mensajes
+│   ├── app.py                      # Servidor FastAPI principal
+│   ├── ai_responses.py             # Procesa respuestas con IA
 │   ├── messages_classify_response.py # Clasificación de mensajes
-│   ├── messages_generate_response.py # Generación de respuestas
-│   ├── requirements.txt           # Dependencias de Python
-├── .env                           # Variables de entorno (ignorado en GitHub)
-├── README.md                      # Documentación del proyecto
-└── .gitignore                      # Exclusiones de archivos para Git
+│   ├── messages_generate_response.py # Generación de respuestas con OpenAI
+│   ├── requirements.txt            # Dependencias de Python
+├── .env                            # Variables de entorno (ignorado en GitHub)
+├── README.md                       # Documentación del proyecto
+└── .gitignore                       # Exclusiones de archivos para Git
 ```
 
 ---
@@ -117,7 +123,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
 ```bash
 cd WhatsappAPI
-node whatsappBot.js
+node bot.js
 ```
 
 ---
@@ -125,12 +131,13 @@ node whatsappBot.js
 ## **Flujo de Trabajo del Proyecto**
 
 1. El cliente envía un mensaje a WhatsApp.
-2. `whatsappBot.js` recibe el mensaje, clasifica la intención y responde según el flujo de ventas.
-3. Si el usuario indica que ha realizado el pago:
+2. `bot.js` recibe el mensaje, lo procesa y lo clasifica.
+3. Si es necesario, consulta FastAPI para detectar la intención o generar respuestas.
+4. Si el usuario indica que ha realizado el pago:
    - El bot envía un mensaje de confirmación.
    - Se notifica automáticamente al administrador.
    - Se proporciona el enlace de descarga una vez validado el pago.
-4. Al iniciar el bot, revisa los mensajes sin responder y envía un mensaje de saludo a los chats nuevos.
+5. Al iniciar el bot, revisa los mensajes sin responder y envía un mensaje de saludo a los chats nuevos.
 
 ---
 
@@ -141,7 +148,7 @@ node whatsappBot.js
 ✅ **Notificación automática al administrador**  
 ✅ **Manejo de mensajes pendientes y chats no respondidos**  
 ✅ **Manejo de intenciones como "Pedir información de dibujos" y "Quiero pagar"**  
-✅ **Backend con FastAPI para procesamiento de mensajes**  
+✅ **Integración con FastAPI para análisis y respuesta inteligente**  
 
 ---
 
