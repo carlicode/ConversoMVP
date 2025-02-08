@@ -70,18 +70,15 @@ pip install -r requirements.txt
 
 ```
 conversoMVP/
-├── WhatsappAPI/                   # Lógica del bot de WhatsApp
-│   ├── bot.js                     # Cliente de WhatsApp principal
-│   ├── handlers/                   # Manejadores de mensajes
-│   │   ├── messageHandler.js       # Procesa mensajes entrantes
-│   ├── utils/                      # Utilidades y funciones auxiliares
-│   │   ├── messageUtils.js         # Funciones para enviar mensajes
+├── WhatsappAPI/                    # Lógica del bot de WhatsApp
+│   ├── whatsappBot.js              # Cliente de WhatsApp principal
+│   ├── unreadMessagesHandler.js    # Responde mensajes iniciales
+│   ├── sendGiftMessage.js          # Envío de mensajes a todos
 │   ├── node_modules/               # Dependencias instaladas
 │   ├── package.json                # Dependencias de Node.js
 │   ├── package-lock.json           # Archivo de lock de dependencias
 │   ├── qr.png                      # Imagen del código QR para pagos
 │   ├── regalo.pdf                  # Libro digital gratuito
-│   ├── ventas.json                 # Registro de ventas confirmadas
 ├── backend/                        # API con FastAPI para clasificación de mensajes
 │   ├── app.py                      # Servidor FastAPI principal
 │   ├── ai_responses.py             # Procesa respuestas con IA
@@ -123,7 +120,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
 ```bash
 cd WhatsappAPI
-node bot.js
+node whatsappBot.js
 ```
 
 ---
@@ -131,7 +128,7 @@ node bot.js
 ## **Flujo de Trabajo del Proyecto**
 
 1. El cliente envía un mensaje a WhatsApp.
-2. `bot.js` recibe el mensaje, lo procesa y lo clasifica.
+2. `whatsappBot.js` recibe el mensaje, lo procesa y lo clasifica.
 3. Si es necesario, consulta FastAPI para detectar la intención o generar respuestas.
 4. Si el usuario indica que ha realizado el pago:
    - El bot envía un mensaje de confirmación.
